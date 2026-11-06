@@ -6,7 +6,7 @@
 /*   By: aaycan <aaycan@student.42kocaeli.com.tr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/11/02 19:24:16 by aaycan            #+#    #+#             */
-/*   Updated: 2026/11/04 03:59:43 by aaycan           ###   ########.fr       */
+/*   Updated: 2026/11/06 02:34:43 by aaycan           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,11 +166,13 @@ static bool	is_number(const std::string &str)
 	std::string::size_type	i;
 	bool					digit_before;
 	bool					digit_after;
+	bool					digit_exponent;
 
 	i = 0;
 	digit_before = false;
 	digit_after = false;
-	if ((i < str.size()) && (str[i] == '-' || str[i] == '+'))
+	digit_exponent = false;
+	if ((i < str.size()) && ((str[i] == '-') || (str[i] == '+')))
 		i++;
 	while ((i < str.size()) && std::isdigit(static_cast<unsigned char>(str[i])))
 	{
@@ -186,8 +188,22 @@ static bool	is_number(const std::string &str)
 			digit_after = true;
 			i++;
 		}
-		if (!digit_after)
+	}
+	if ((!digit_before) && (!digit_after))
+		return (false);
+	if ((i < str.size()) && ((str[i] == 'e') || (str[i] == 'E')))
+	{
+		i++;
+		if ((i < str.size()) && ((str[i] == '-') || (str[i] == '+')))
+			i++;
+		while ((i < str.size())
+			&& std::isdigit(static_cast<unsigned char>(str[i])))
+		{
+			digit_exponent = true;
+			i++;
+		}
+		if (!digit_exponent)
 			return (false);
 	}
-	return ((digit_before) && (i == str.size()));
+	return (i == str.size());
 }
